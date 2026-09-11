@@ -8,7 +8,6 @@ export const SessionSetupModal: React.FC = () => {
   const language = useGameStore((s) => s.language);
   const mode = useGameStore((s) => s.mode);
   const setScreen = useGameStore((s) => s.setScreen);
-  const startSession = useGameStore((s) => s.startSession);
   const t = TRANSLATIONS[language];
   const isRtl = language === 'ar';
 
@@ -18,7 +17,8 @@ export const SessionSetupModal: React.FC = () => {
   const modeMeta = t.modes[mode];
 
   const handleStart = () => {
-    startSession(length, turnMode);
+    useGameStore.setState({ sessionLength: length, turnMode });
+    setScreen('players');
   };
 
   const lengths: SessionLength[] = [10, 20, 35];
@@ -30,7 +30,7 @@ export const SessionSetupModal: React.FC = () => {
         <button
           type="button"
           onClick={() => setScreen('home')}
-          className="inline-flex items-center gap-1.5 text-xs font-semibold text-zinc-400 hover:text-white px-3 py-1.5 rounded-full bg-zinc-900/80 border border-zinc-800 transition-all duration-150 active:scale-95"
+          className="inline-flex items-center gap-1.5 text-xs font-semibold text-zinc-400 hover:text-white px-3 py-1.5 rounded-full bg-zinc-900/80 border border-zinc-800 transition-all duration-150 active:scale-95 cursor-pointer"
         >
           {isRtl ? <ArrowRight className="w-3.5 h-3.5" /> : <ArrowLeft className="w-3.5 h-3.5" />}
           <span>{t.back}</span>
@@ -41,15 +41,17 @@ export const SessionSetupModal: React.FC = () => {
         </span>
       </div>
 
-      {/* Main Settings Container */}
+      {/* Main Content Settings */}
       <div className="w-full flex-1 flex flex-col justify-center my-auto py-4">
+        {/* Title */}
         <div className="text-center mb-6">
           <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
             {t.setupTitle}
           </h2>
+          <p className="text-xs text-zinc-400 mt-1">{modeMeta.desc}</p>
         </div>
 
-        {/* Section 1: Time Selection */}
+        {/* Section 1: Session Length */}
         <div className="mb-6">
           <div className="flex items-center gap-2 mb-3 text-zinc-300 font-semibold text-sm">
             <Clock className="w-4 h-4 text-purple-400" />
@@ -66,15 +68,15 @@ export const SessionSetupModal: React.FC = () => {
                   key={len}
                   type="button"
                   onClick={() => setLength(len)}
-                  className={`relative flex flex-col items-center justify-center p-3 rounded-2xl border transition-all duration-200 cursor-pointer text-center ${
+                  className={`relative flex flex-col items-center justify-center p-3.5 rounded-2xl border transition-all duration-200 cursor-pointer ${
                     isSelected
-                      ? 'bg-purple-900/30 border-purple-500 shadow-[0_0_20px_-4px_rgba(168,85,247,0.3)] scale-[1.02]'
+                      ? 'bg-purple-900/40 border-purple-500 shadow-[0_0_20px_-3px_rgba(168,85,247,0.4)] scale-[1.02]'
                       : 'bg-zinc-900/60 border-zinc-800/80 hover:border-zinc-700 text-zinc-400'
                   }`}
                 >
                   <span
                     className={`text-sm font-bold mb-0.5 ${
-                      isSelected ? 'text-white' : 'text-zinc-200'
+                      isSelected ? 'text-white' : 'text-zinc-300'
                     }`}
                   >
                     {info.label}
@@ -184,7 +186,7 @@ export const SessionSetupModal: React.FC = () => {
         </div>
       </div>
 
-      {/* Start Button */}
+      {/* Next: Enter Player Names Button */}
       <div className="w-full pb-safe pt-2">
         <button
           type="button"
@@ -192,7 +194,7 @@ export const SessionSetupModal: React.FC = () => {
           className="w-full flex items-center justify-center gap-3 py-4 rounded-2xl bg-gradient-to-r from-purple-600 via-purple-500 to-pink-600 text-white font-bold text-lg shadow-[0_0_30px_-5px_rgba(168,85,247,0.4)] hover:shadow-[0_0_35px_-2px_rgba(168,85,247,0.6)] active:scale-[0.98] transition-all duration-200 cursor-pointer"
         >
           <Play className="w-5 h-5 fill-white text-white" />
-          <span>{t.startGame}</span>
+          <span>{isRtl ? 'مين هيلعب؟ 👀' : 'Choose Players 👀'}</span>
         </button>
       </div>
     </div>

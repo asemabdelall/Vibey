@@ -5,8 +5,9 @@ import { GameScreen } from './components/game/GameScreen';
 import { HomeScreen } from './components/home/HomeScreen';
 import { IntroSplash } from './components/home/IntroSplash';
 import { SessionSetupModal } from './components/home/SessionSetupModal';
-import { ResultScreen } from './components/results/ResultScreen';
 import { PWAUpdateToast } from './components/pwa/PWAUpdateToast';
+import { ResultScreen } from './components/results/ResultScreen';
+import { PlayerNames } from './components/setup/PlayerNames';
 import { useGameStore } from './store/game-store';
 
 export const App: React.FC = () => {
@@ -27,6 +28,8 @@ export const App: React.FC = () => {
         return <HomeScreen key="home" />;
       case 'setup':
         return <SessionSetupModal key="setup" />;
+      case 'players':
+        return <PlayerNames key="players" />;
       case 'game':
         return <GameScreen key="game" />;
       case 'result':

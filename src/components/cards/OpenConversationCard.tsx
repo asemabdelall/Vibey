@@ -1,6 +1,7 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import { Eye, HelpCircle } from 'lucide-react';
 import React from 'react';
+import { interpolatePlayers } from '../../lib/player-utils';
 import { TRANSLATIONS } from '../../lib/translations';
 import { useGameStore } from '../../store/game-store';
 import type { QuestionItem } from '../../types/game';
@@ -11,12 +12,21 @@ interface OpenConversationCardProps {
 
 export const OpenConversationCard: React.FC<OpenConversationCardProps> = ({ question }) => {
   const language = useGameStore((s) => s.language);
+  const players = useGameStore((s) => s.players);
   const showFollowUp = useGameStore((s) => s.showFollowUp);
   const toggleFollowUp = useGameStore((s) => s.toggleFollowUp);
 
   const t = TRANSLATIONS[language];
   const qData = question[language] || question.ar;
   const hasFollowUp = Boolean(qData.followUp);
+
+  const questionText = players
+    ? interpolatePlayers(qData.question, { players })
+    : qData.question;
+
+  const followUpText = qData.followUp && players
+    ? interpolatePlayers(qData.followUp, { players })
+    : qData.followUp;
 
   return (
     <div className="w-full flex flex-col items-center select-none py-2">
@@ -25,7 +35,7 @@ export const OpenConversationCard: React.FC<OpenConversationCardProps> = ({ ques
         layout
         className="text-2xl sm:text-3xl font-extrabold text-white text-center tracking-tight leading-snug max-w-sm mb-6"
       >
-        {qData.question}
+        {questionText}
       </motion.h2>
 
       {/* Spontaneous Follow-up Expander */}
@@ -57,7 +67,7 @@ export const OpenConversationCard: React.FC<OpenConversationCardProps> = ({ ques
                   <span>{t.followUpLabel}</span>
                 </div>
                 <p className="text-base sm:text-lg font-bold text-white leading-relaxed">
-                  {qData.followUp}
+                  {followUpText}
                 </p>
               </motion.div>
             </AnimatePresence>

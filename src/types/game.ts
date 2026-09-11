@@ -1,3 +1,6 @@
+import type { SessionMoment } from './banter';
+import type { PlayerId } from './players';
+
 export type Language = 'ar' | 'en';
 
 export type GameMode =
@@ -12,7 +15,9 @@ export type CardType =
   | 'multiple-choice'
   | 'open-conversation'
   | 'guess-me'
-  | 'plot-twist';
+  | 'plot-twist'
+  | 'more-likely'
+  | 'point-at';
 
 export type ProgressionLevel = 1 | 2 | 3 | 4 | 5;
 
@@ -43,13 +48,25 @@ export interface SessionStats {
   totalQuestions: number;
   matches: number;
   differences: number;
+  matchStreak: number;
+  differenceStreak: number;
   skips: number;
+  skipStreak: number;
   liked: number;
   guessCorrect: number;
   guessTotal: number;
+  guessCorrectByPlayer: Record<PlayerId, number>;
+  guessAttemptsByPlayer: Record<PlayerId, number>;
+  guessStreak: number;
+  moreLikelyAgreements: number;
+  moreLikelyDisagreements: number;
+  moreLikelySelections: Record<PlayerId, number>;
+  pointAtCardsCompleted: number;
   plotTwists: number;
   levelReached: number;
   tagsEngaged: Record<string, number>;
+  banterShown: string[];
+  sessionMoments: SessionMoment[];
 }
 
 export type ResultArchetypeId =
@@ -73,6 +90,10 @@ export interface SessionResult {
   observationEn: string;
   accentColor: string;
   stats: SessionStats;
+  finalWordsAr?: string;
+  finalWordsEn?: string;
+  callbackAr?: string;
+  callbackEn?: string;
 }
 
-export type Screen = 'splash' | 'home' | 'setup' | 'game' | 'result';
+export type Screen = 'splash' | 'home' | 'setup' | 'players' | 'game' | 'result';

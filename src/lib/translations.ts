@@ -105,10 +105,46 @@ export const TRANSLATIONS = {
     guessCorrect: 'كنت عارف 😎🔥',
     guessWrong: 'ولا قريب حتى 😂',
 
+    // Player Names Setup
+    namesTitle: 'مين معانا النهارده؟ 👀',
+    namesSubtitle: 'الأسماء بس… مش بنحقق معاكم 😭',
+    playerOneLabel: 'اسم الأول',
+    playerTwoLabel: 'اسم التاني',
+    playerOnePlaceholder: 'عاصم',
+    playerTwoPlaceholder: 'سارة',
+    namesCta: 'يلا نشوف آخركم 🚀',
+    namesRandomMicrocopy: [
+      'الأسماء بس… مش بنحقق معاكم 😭',
+      'وعد مش هنبعتلكم Spam 🤝',
+      'مش محتاجين الرقم القومي، الاسم كفاية 😂',
+      'اكتبوا صح عشان محدش يزعل بعدين 👀',
+    ],
+
+    // Who's More Likely
+    moreLikelyBadge: 'مين أكتر؟ 👀',
+    moreLikelySecretPrompt: 'كل واحد يختار من غير ما التاني يشوف 🤫',
+    moreLikelyPassPrompt: (name: string) => `إدي الموبايل لـ ${name} عشان يختار 📱`,
+    moreLikelyRevealCta: 'نشوف الإجماع 👀💥',
+    moreLikelyAgreed: (name: string) => `الإجماع تم! ${name} متهم رسميًا 🎯`,
+    moreLikelySplit: 'الثقة بينكم جميلة جدًا 💀 كل واحد شايف المصيبة في التاني',
+
+    // Point At Them
+    pointAtBadge: 'أشّروا 👀',
+    pointAtIntro: 'من غير كلام…',
+    pointAtReady: 'أشّروا! 👀',
+    pointAtCta: 'كشفنا بعض 💥',
+
     // Plot Twist
     plotTwistBadge: '🎲 PLOT TWIST',
     plotTwistSub: 'تحدي عفوي في السريع.. اتعاملوا سوا!',
     plotTwistDone: 'تم بنجاح 🔥',
+
+    // Results Screen & Final Words
+    finalWordsHeading: 'كلمة Vibey الأخيرة ✨',
+    playAgainChoiceTitle: 'نلعب تاني؟',
+    playAgainChoiceDesc: 'حابين تكملوا بنفس الأسماء ولا نغيّر الأشخاص؟',
+    playAgainSame: 'نفس الأشخاص 🔁',
+    playAgainNew: 'نغيّر الأشخاص 👥',
 
     // Results Screen
     resultHeading: 'الـVibe النهائي بينكم ✨',
@@ -270,10 +306,46 @@ export const TRANSLATIONS = {
     guessCorrect: 'Knew it! 😎🔥',
     guessWrong: 'Not even close 😂',
 
+    // Player Names Setup
+    namesTitle: "Who's vibing today? 👀",
+    namesSubtitle: 'Just first names… no background checks here 😭',
+    playerOneLabel: 'Player one',
+    playerTwoLabel: 'Player two',
+    playerOnePlaceholder: 'Asem',
+    playerTwoPlaceholder: 'Sara',
+    namesCta: "Let's see your vibe 🚀",
+    namesRandomMicrocopy: [
+      'Just names… no interrogation here 😭',
+      'Promise, zero spam emails ever 🤝',
+      'First names only, no passport needed 😂',
+      'Spell it right so no one gets offended later 👀',
+    ],
+
+    // Who's More Likely
+    moreLikelyBadge: "WHO'S MORE LIKELY 👀",
+    moreLikelySecretPrompt: 'Each pick secretly without peeking 🤫',
+    moreLikelyPassPrompt: (name: string) => `Pass the phone to ${name} to choose 📱`,
+    moreLikelyRevealCta: 'Reveal choices 👀💥',
+    moreLikelyAgreed: (name: string) => `Unanimous verdict! ${name} is officially nominated 🎯`,
+    moreLikelySplit: 'Peak mutual trust 💀 both nominated each other',
+
+    // Point At Them
+    pointAtBadge: 'POINT AT THEM 👀',
+    pointAtIntro: 'Without speaking…',
+    pointAtReady: 'POINT! 👀',
+    pointAtCta: 'Busted each other 💥',
+
     // Plot Twist
     plotTwistBadge: '🎲 PLOT TWIST',
     plotTwistSub: 'A spontaneous mini-challenge. Do it together right now!',
     plotTwistDone: 'Done 🔥',
+
+    // Results Screen & Final Words
+    finalWordsHeading: "VIBEY'S FINAL WORDS ✨",
+    playAgainChoiceTitle: 'Play Again?',
+    playAgainChoiceDesc: 'Continue with the same players or switch names?',
+    playAgainSame: 'Same Players 🔁',
+    playAgainNew: 'Change Players 👥',
 
     // Results Screen
     resultHeading: 'Your Session Vibe ✨',
