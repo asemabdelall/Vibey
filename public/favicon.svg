@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
+  <rect width="32" height="32" rx="8" fill="#09090b"/>
+  <path d="M7 16C7 11.5817 10.5817 8 15 8C19.4183 8 23 11.5817 23 16C23 20.4183 19.4183 24 15 24" stroke="url(#vibey-grad1)" stroke-width="3" stroke-linecap="round"/>
+  <path d="M25 16C25 20.4183 21.4183 24 17 24C12.5817 24 9 20.4183 9 16C9 11.5817 12.5817 8 17 8" stroke="url(#vibey-grad2)" stroke-width="3" stroke-linecap="round"/>
+  <defs>
+    <linearGradient id="vibey-grad1" x1="7" y1="8" x2="23" y2="24" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#8B5CF6"/>
+      <stop offset="1" stop-color="#EC4899"/>
+    </linearGradient>
+    <linearGradient id="vibey-grad2" x1="25" y1="24" x2="9" y2="8" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#EC4899"/>
+      <stop offset="1" stop-color="#A855F7"/>
+    </linearGradient>
+  </defs>
+</svg>
