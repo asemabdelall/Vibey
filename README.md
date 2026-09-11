@@ -158,6 +158,7 @@ src/
 ├── lib/
 │   ├── game-engine.ts              # Progression, deck builder, tag weighting
 │   ├── haptics.ts                  # navigator.vibrate wrapper
+│   ├── pwa-manager.ts              # Service worker lifecycle & install management
 │   ├── result-engine.ts            # Full-session archetype calculator
 │   ├── sound-manager.ts            # Web Audio API synthesizer
 │   ├── storage.ts                  # LocalStorage persistence helpers
@@ -173,6 +174,18 @@ src/
 
 ---
 
+## 📱 Progressive Web App (PWA) & Mobile Installation
+
+Vibey is engineered as a production-grade Progressive Web App that looks and behaves like an authentic native iOS / Android application:
+
+- **1-Tap Direct Installation:** Fast, non-intrusive in-app install flow that triggers the native OS install dialog with a single tap.
+- **Standalone Mobile View:** Runs fullscreen in standalone mode with portrait orientation lock, custom splash icon, and edge-to-edge safe area insets (`env(safe-area-inset-*)`).
+- **100% Offline Playability:** Powered by Workbox service worker caching for offline cards, Google Fonts (*Alexandria* & *Plus Jakarta Sans*), and real-time Web Audio API sound synthesis.
+- **App Shortcuts:** Direct home-screen long-press shortcuts for *Quick Vibes*, *Chemistry*, *Deep Talk*, and *Guess Me*.
+- **Native Touch Dynamics:** Suppresses browser pull-to-refresh overscroll bouncing (`overscroll-behavior: none`) and iOS callouts (`-webkit-touch-callout: none`).
+
+---
+
 ## 🚀 Quick Start
 
 ### Prerequisites
@@ -182,8 +195,8 @@ src/
 ### Installation
 ```bash
 # Clone the repository
-git clone https://github.com/your-username/vibey.git
-cd vibey
+git clone https://github.com/asemabdelall/Vibey.git
+cd Vibey
 
 # Install dependencies
 npm install
