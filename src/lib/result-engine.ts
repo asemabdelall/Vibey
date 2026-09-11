@@ -1,8 +1,10 @@
-import type { ResultArchetypeId, SessionResult, SessionStats } from '../types/game';
+import { FinalWordsEngine } from './final-words-engine';
 import { TRANSLATIONS } from './translations';
+import type { ResultArchetypeId, SessionResult, SessionStats } from '../types/game';
+import type { PlayersState } from '../types/players';
 
 export class ResultEngine {
-  public static calculateResult(stats: SessionStats): SessionResult {
+  public static calculateResult(stats: SessionStats, players?: PlayersState | null): SessionResult {
     const {
       totalQuestions,
       matches,
@@ -42,6 +44,7 @@ export class ResultEngine {
     // 2. Opposites, Somehow Working
     if (diffRatio >= 0.55 && skipRatio < 0.25) scores['opposites-working'] += 45;
     if (differences >= 4 && liked >= 2) scores['opposites-working'] += 30;
+    if (diffRatio >= 0.65) scores['opposites-working'] += 25;
 
     // 3. Certified Yappers
     if (skipRatio <= 0.15 && liked >= 3) scores['certified-yappers'] += 40;
@@ -98,6 +101,24 @@ export class ResultEngine {
       'chaotic-energy': '🎲',
     };
 
+    // Generate Final Words & Callbacks if players state is present
+    let finalWordsOutput = {
+      finalWordsAr: undefined as string | undefined,
+      finalWordsEn: undefined as string | undefined,
+      callbackAr: undefined as string | undefined,
+      callbackEn: undefined as string | undefined,
+    };
+
+    if (players) {
+      const generated = FinalWordsEngine.generate(stats, highestId, players);
+      finalWordsOutput = {
+        finalWordsAr: generated.finalWordsAr,
+        finalWordsEn: generated.finalWordsEn,
+        callbackAr: generated.callbackAr,
+        callbackEn: generated.callbackEn,
+      };
+    }
+
     return {
       id: highestId,
       emoji: emojiMap[highestId],
@@ -111,6 +132,7 @@ export class ResultEngine {
       observationEn: enMeta.observation,
       accentColor: accentMap[highestId],
       stats,
+      ...finalWordsOutput,
     };
   }
 }

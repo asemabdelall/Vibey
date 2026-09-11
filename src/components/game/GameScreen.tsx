@@ -1,10 +1,13 @@
 import { AnimatePresence, motion } from 'framer-motion';
 import React from 'react';
 import { useGameStore } from '../../store/game-store';
+import { VibeyReaction } from '../banter/VibeyReaction';
 import { GuessMeCard } from '../cards/GuessMeCard';
+import { MoreLikelyCard } from '../cards/MoreLikelyCard';
 import { MultipleChoiceCard } from '../cards/MultipleChoiceCard';
 import { OpenConversationCard } from '../cards/OpenConversationCard';
 import { PlotTwistCard } from '../cards/PlotTwistCard';
+import { PointAtCard } from '../cards/PointAtCard';
 import { QuickChoiceCard } from '../cards/QuickChoiceCard';
 import { SwipeableCardContainer } from '../cards/SwipeableCardContainer';
 import { CardControls } from './CardControls';
@@ -31,6 +34,10 @@ export const GameScreen: React.FC = () => {
         return <MultipleChoiceCard question={currentQuestion} />;
       case 'guess-me':
         return <GuessMeCard question={currentQuestion} />;
+      case 'more-likely':
+        return <MoreLikelyCard question={currentQuestion} />;
+      case 'point-at':
+        return <PointAtCard question={currentQuestion} />;
       case 'plot-twist':
         return <PlotTwistCard question={currentQuestion} />;
       case 'open-conversation':
@@ -41,6 +48,9 @@ export const GameScreen: React.FC = () => {
 
   return (
     <div className="relative min-h-[100dvh] w-full flex flex-col justify-between items-center px-4 py-4 sm:py-6 max-w-md mx-auto select-none overflow-hidden">
+      {/* Floating Banter Engine Reaction */}
+      <VibeyReaction />
+
       {/* Top Game Header */}
       <GameHeader />
 

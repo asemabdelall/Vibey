@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { ArrowLeft, ArrowRight, Check, EyeOff, HelpCircle, Smartphone, X as XIcon } from 'lucide-react';
 import React from 'react';
+import { interpolatePlayers } from '../../lib/player-utils';
 import { TRANSLATIONS } from '../../lib/translations';
 import { useGameStore } from '../../store/game-store';
 import type { QuestionItem } from '../../types/game';
@@ -11,6 +12,8 @@ interface GuessMeCardProps {
 
 export const GuessMeCard: React.FC<GuessMeCardProps> = ({ question }) => {
   const language = useGameStore((s) => s.language);
+  const players = useGameStore((s) => s.players);
+  const currentTurnPlayer = useGameStore((s) => s.currentTurnPlayer);
   const guessStep = useGameStore((s) => s.guessStep);
   const secretChoiceIndex = useGameStore((s) => s.secretChoiceIndex);
   const guessedChoiceIndex = useGameStore((s) => s.guessedChoiceIndex);
@@ -24,6 +27,21 @@ export const GuessMeCard: React.FC<GuessMeCardProps> = ({ question }) => {
   const isRtl = language === 'ar';
   const qData = question[language] || question.ar;
   const options = qData.options || [];
+
+  const nameA = players?.playerA.name || (isRtl ? 'الأول' : 'Player 1');
+  const nameB = players?.playerB.name || (isRtl ? 'التاني' : 'Player 2');
+
+  // If currentTurnPlayer is 1, A is picker, B is guesser. If 2, B is picker, A is guesser.
+  const pickerName = currentTurnPlayer === 1 ? nameA : nameB;
+  const guesserName = currentTurnPlayer === 1 ? nameB : nameA;
+
+  const questionText = players
+    ? interpolatePlayers(qData.question, {
+        players,
+        currentPlayer: pickerName,
+        otherPlayer: guesserName,
+      })
+    : qData.question;
 
   return (
     <div className="w-full flex flex-col items-center select-none perspective-1000">
@@ -43,14 +61,23 @@ export const GuessMeCard: React.FC<GuessMeCardProps> = ({ question }) => {
         >
           {/* Question Title */}
           <h2 className="text-2xl sm:text-3xl font-extrabold text-white text-center tracking-tight leading-snug mb-4">
-            {qData.question}
+            {questionText}
           </h2>
 
-          {/* Sub-instruction */}
-          <div className="text-center mb-5">
+          {/* Sub-instruction with personalized names */}
+          <div className="text-center mb-5 flex flex-col items-center gap-1.5">
             <span className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full text-xs font-bold bg-zinc-800/90 text-amber-300 border border-amber-500/30">
               <EyeOff className="w-3.5 h-3.5" />
-              <span>{t.guessStep1}</span>
+              <span>
+                {isRtl
+                  ? `${pickerName}، اختار إجابتك السرية 🤫`
+                  : `${pickerName}, pick your secret choice 🤫`}
+              </span>
+            </span>
+            <span className="text-[11px] text-zinc-400 font-medium">
+              {isRtl
+                ? `${guesserName}… ممنوع تبص 👀`
+                : `${guesserName}… no peeking 👀`}
             </span>
           </div>
 
@@ -89,7 +116,11 @@ export const GuessMeCard: React.FC<GuessMeCardProps> = ({ question }) => {
                 className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-purple-600 to-pink-600 text-white font-extrabold text-sm sm:text-base flex items-center justify-center gap-2 shadow-lg active:scale-95 transition-all cursor-pointer"
               >
                 <Smartphone className="w-4 h-4" />
-                <span>{t.passPhone}</span>
+                <span>
+                  {isRtl
+                    ? `إدي الموبايل لـ ${guesserName} عشان يخمن 📱`
+                    : `Pass the phone to ${guesserName} to guess 📱`}
+                </span>
               </button>
             </motion.div>
           )}
@@ -103,7 +134,7 @@ export const GuessMeCard: React.FC<GuessMeCardProps> = ({ question }) => {
         >
           {/* Question Title */}
           <h2 className="text-2xl sm:text-3xl font-extrabold text-white text-center tracking-tight leading-snug mb-4">
-            {qData.question}
+            {questionText}
           </h2>
 
           {/* Guesser Prompt or Result Banner */}
@@ -111,7 +142,11 @@ export const GuessMeCard: React.FC<GuessMeCardProps> = ({ question }) => {
             {guessStep === 'guesser-pick' ? (
               <span className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full text-xs font-bold bg-zinc-800/90 text-purple-300 border border-purple-500/30">
                 <HelpCircle className="w-3.5 h-3.5" />
-                <span>{t.guessPrompt}</span>
+                <span>
+                  {isRtl
+                    ? `يلا يا ${guesserName}، خمن ${pickerName} اختار إيه؟`
+                    : `Hey ${guesserName}, what did ${pickerName} choose?`}
+                </span>
               </span>
             ) : guessIsCorrect ? (
               <motion.div
@@ -120,7 +155,11 @@ export const GuessMeCard: React.FC<GuessMeCardProps> = ({ question }) => {
                 className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-sm font-black bg-emerald-950/80 text-emerald-200 border border-emerald-500/50 shadow-[0_0_25px_rgba(16,185,129,0.4)]"
               >
                 <Check className="w-4 h-4 text-emerald-300" strokeWidth={3} />
-                <span>{t.guessCorrect}</span>
+                <span>
+                  {isRtl
+                    ? `${guesserName} عارف ${pickerName} زيادة عن اللزوم 👀🔥`
+                    : `${guesserName} read ${pickerName} like an open book 😎`}
+                </span>
               </motion.div>
             ) : (
               <motion.div
@@ -130,7 +169,11 @@ export const GuessMeCard: React.FC<GuessMeCardProps> = ({ question }) => {
                 className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-sm font-bold bg-rose-950/80 text-rose-200 border border-rose-500/40"
               >
                 <XIcon className="w-4 h-4 text-rose-300" />
-                <span>{t.guessWrong}</span>
+                <span>
+                  {isRtl
+                    ? `ولا قريب حتى يا ${guesserName} 😭`
+                    : `Not even close, ${guesserName} 😭`}
+                </span>
               </motion.div>
             )}
           </div>
@@ -145,7 +188,7 @@ export const GuessMeCard: React.FC<GuessMeCardProps> = ({ question }) => {
               let btnStyle = 'bg-zinc-900/80 border-zinc-800/80 hover:border-zinc-700 text-zinc-300';
               if (isRevealed) {
                 if (isActualSecret) {
-                  btnStyle = 'bg-emerald-950/70 border-emerald-500 text-emerald-100 shadow-[0_0_20px_rgba(16,185,129,0.35)]';
+                  btnStyle = 'bg-emerald-950/70 border-emerald-500 text-emerald-100 shadow-[0_0_20px_rgba(168,85,247,0.35)]';
                 } else if (isGuessed && !guessIsCorrect) {
                   btnStyle = 'bg-rose-950/60 border-rose-500/80 text-rose-200';
                 } else {
@@ -166,7 +209,7 @@ export const GuessMeCard: React.FC<GuessMeCardProps> = ({ question }) => {
                   <span>{opt}</span>
                   {isRevealed && isActualSecret && (
                     <span className="absolute end-3 top-1/2 -translate-y-1/2 text-[11px] font-bold px-2 py-0.5 rounded-full bg-emerald-500 text-white">
-                      {isRtl ? 'الإجابة الصح' : 'Actual'}
+                      {isRtl ? `اختيار ${pickerName}` : `${pickerName}'s Pick`}
                     </span>
                   )}
                 </button>

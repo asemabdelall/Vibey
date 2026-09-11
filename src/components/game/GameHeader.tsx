@@ -14,12 +14,18 @@ export const GameHeader: React.FC = () => {
   const toggleSound = useGameStore((s) => s.toggleSound);
   const turnMode = useGameStore((s) => s.turnMode);
   const currentTurnPlayer = useGameStore((s) => s.currentTurnPlayer);
+  const players = useGameStore((s) => s.players);
 
   const t = TRANSLATIONS[language];
   const [showConfirm, setShowConfirm] = useState(false);
 
   const progressPercent = Math.min(100, Math.round(((currentIndex + 1) / sessionLength) * 100));
   const modeTitle = t.modes[mode]?.title || 'Vibey';
+
+  const turnPlayerName =
+    currentTurnPlayer === 1
+      ? players?.playerA.name || (language === 'ar' ? 'الأول' : 'Player 1')
+      : players?.playerB.name || (language === 'ar' ? 'التاني' : 'Player 2');
 
   return (
     <>
@@ -29,7 +35,7 @@ export const GameHeader: React.FC = () => {
           <button
             type="button"
             onClick={() => setShowConfirm(true)}
-            className="w-9 h-9 rounded-full bg-zinc-900/80 border border-zinc-800 text-zinc-400 hover:text-white flex items-center justify-center transition-all duration-150 active:scale-90"
+            className="w-9 h-9 rounded-full bg-zinc-900/80 border border-zinc-800 text-zinc-400 hover:text-white flex items-center justify-center transition-all duration-150 active:scale-90 cursor-pointer"
             aria-label="Exit Game"
           >
             <X className="w-4 h-4" />
@@ -41,8 +47,8 @@ export const GameHeader: React.FC = () => {
               {modeTitle}
             </span>
             {turnMode === 'alternating' && (
-              <span className="text-[10px] font-semibold text-purple-400 px-2 py-0.5 rounded-full bg-purple-950/40 border border-purple-800/30 mt-0.5">
-                {t.playerTurn(currentTurnPlayer)}
+              <span className="text-[10px] font-semibold text-purple-400 px-2.5 py-0.5 rounded-full bg-purple-950/40 border border-purple-800/30 mt-0.5">
+                {language === 'ar' ? `دور: ${turnPlayerName} 👀` : `${turnPlayerName}'s Turn 👀`}
               </span>
             )}
           </div>
@@ -52,7 +58,7 @@ export const GameHeader: React.FC = () => {
             <button
               type="button"
               onClick={toggleSound}
-              className="w-8 h-8 rounded-full bg-zinc-900/80 border border-zinc-800 text-zinc-400 hover:text-white flex items-center justify-center transition-all duration-150 active:scale-90"
+              className="w-8 h-8 rounded-full bg-zinc-900/80 border border-zinc-800 text-zinc-400 hover:text-white flex items-center justify-center transition-all duration-150 active:scale-90 cursor-pointer"
               aria-label="Toggle Sound"
             >
               {soundEnabled ? (
@@ -89,7 +95,7 @@ export const GameHeader: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setShowConfirm(false)}
-                className="w-full py-2.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-bold text-sm transition-all"
+                className="w-full py-2.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-bold text-sm transition-all cursor-pointer"
               >
                 {t.resume}
               </button>
@@ -99,7 +105,7 @@ export const GameHeader: React.FC = () => {
                   setShowConfirm(false);
                   exitSession();
                 }}
-                className="w-full py-2.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-semibold text-sm transition-all"
+                className="w-full py-2.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-400 hover:text-white font-medium text-sm transition-all cursor-pointer"
               >
                 {t.exit}
               </button>

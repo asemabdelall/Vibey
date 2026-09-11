@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { ArrowLeft, ArrowRight, Check, Sparkles } from 'lucide-react';
 import React from 'react';
+import { interpolatePlayers } from '../../lib/player-utils';
 import { TRANSLATIONS } from '../../lib/translations';
 import { useGameStore } from '../../store/game-store';
 import type { QuestionItem } from '../../types/game';
@@ -11,6 +12,7 @@ interface QuickChoiceCardProps {
 
 export const QuickChoiceCard: React.FC<QuickChoiceCardProps> = ({ question }) => {
   const language = useGameStore((s) => s.language);
+  const players = useGameStore((s) => s.players);
   const p1Choice = useGameStore((s) => s.p1Choice);
   const p2Choice = useGameStore((s) => s.p2Choice);
   const choiceResolution = useGameStore((s) => s.choiceResolution);
@@ -21,6 +23,13 @@ export const QuickChoiceCard: React.FC<QuickChoiceCardProps> = ({ question }) =>
   const isRtl = language === 'ar';
   const qData = question[language] || question.ar;
   const options = qData.options || [];
+
+  const nameA = players?.playerA.name || (isRtl ? 'الأول' : 'Player 1');
+  const nameB = players?.playerB.name || (isRtl ? 'التاني' : 'Player 2');
+
+  const questionText = players
+    ? interpolatePlayers(qData.question, { players })
+    : qData.question;
 
   // Determine current active picker (Player 1 first, then Player 2)
   const isP1Turn = p1Choice === null;
@@ -39,31 +48,81 @@ export const QuickChoiceCard: React.FC<QuickChoiceCardProps> = ({ question }) =>
     <div className="w-full flex flex-col items-center select-none">
       {/* Question Hero Title */}
       <h2 className="text-2xl sm:text-3xl font-extrabold text-white text-center tracking-tight leading-snug mb-6">
-        {qData.question}
+        {questionText}
       </h2>
 
       {/* Sub-prompt depending on player state */}
       <div className="text-center mb-6">
         {!isResolved ? (
           <span className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full text-xs font-bold bg-zinc-800/90 text-purple-300 border border-purple-800/40">
-            {isP1Turn ? (isRtl ? 'دور: الشخص الأول 👤' : "Player 1's Pick 👤") : (isRtl ? 'دور: الشخص التاني 👥' : "Player 2's Pick 👥")}
+            {isP1Turn
+              ? isRtl
+                ? `${nameA}، دورك 👀`
+                : `${nameA}'s Pick 👀`
+              : isRtl
+              ? `${nameB}، دورك 👀`
+              : `${nameB}'s Pick 👀`}
           </span>
         ) : choiceResolution === 'matched' ? (
           <motion.div
             initial={{ scale: 0.85, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-black bg-purple-950/80 text-purple-200 border border-purple-500/50 shadow-[0_0_20px_rgba(168,85,247,0.4)]"
+            className="flex flex-col items-center gap-2"
           >
-            <Sparkles className="w-4 h-4 text-purple-300 animate-pulse" />
-            <span>{t.sameVibe}</span>
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-black bg-purple-950/80 text-purple-200 border border-purple-500/50 shadow-[0_0_20px_rgba(168,85,247,0.4)]">
+              <Sparkles className="w-4 h-4 text-purple-300 animate-pulse" />
+              <span>{t.sameVibe}</span>
+            </div>
+            {/* Visual names moving closer together */}
+            <div className="flex items-center justify-center gap-1.5 mt-1">
+              <motion.span
+                initial={{ x: -18, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                transition={{ type: 'spring', stiffness: 350, damping: 20 }}
+                className="px-2.5 py-0.5 rounded-full bg-purple-900/60 border border-purple-500/40 text-purple-200 text-xs font-bold"
+              >
+                {nameA}
+              </motion.span>
+              <span className="text-purple-400 text-xs">✨</span>
+              <motion.span
+                initial={{ x: 18, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                transition={{ type: 'spring', stiffness: 350, damping: 20 }}
+                className="px-2.5 py-0.5 rounded-full bg-purple-900/60 border border-purple-500/40 text-purple-200 text-xs font-bold"
+              >
+                {nameB}
+              </motion.span>
+            </div>
           </motion.div>
         ) : (
           <motion.div
             initial={{ scale: 0.85, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-bold bg-amber-950/60 text-amber-200 border border-amber-500/40"
+            className="flex flex-col items-center gap-2"
           >
-            <span>{t.defendVibe}</span>
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-sm font-bold bg-amber-950/60 text-amber-200 border border-amber-500/40">
+              <span>{t.defendVibe}</span>
+            </div>
+            {/* Visual names moving slightly apart */}
+            <div className="flex items-center justify-center gap-3 mt-1">
+              <motion.span
+                initial={{ x: 0 }}
+                animate={{ x: -8 }}
+                transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+                className="px-2.5 py-0.5 rounded-full bg-zinc-800/80 border border-amber-500/30 text-amber-200 text-xs font-bold"
+              >
+                {nameA}
+              </motion.span>
+              <span className="text-zinc-500 text-xs font-mono">≠</span>
+              <motion.span
+                initial={{ x: 0 }}
+                animate={{ x: 8 }}
+                transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+                className="px-2.5 py-0.5 rounded-full bg-zinc-800/80 border border-amber-500/30 text-amber-200 text-xs font-bold"
+              >
+                {nameB}
+              </motion.span>
+            </div>
           </motion.div>
         )}
       </div>
@@ -106,15 +165,15 @@ export const QuickChoiceCard: React.FC<QuickChoiceCardProps> = ({ question }) =>
                   {isP1Selected && isP2Selected ? (
                     <span className="px-2 py-0.5 rounded-full bg-purple-500 text-white flex items-center gap-1">
                       <Check className="w-3 h-3" />
-                      {isRtl ? 'الاتنين' : 'Both'}
+                      {`${nameA} + ${nameB}`}
                     </span>
                   ) : isP1Selected ? (
                     <span className="px-2 py-0.5 rounded-full bg-zinc-700 text-zinc-200">
-                      {isRtl ? 'الأول' : 'P1'}
+                      {nameA}
                     </span>
                   ) : isP2Selected ? (
                     <span className="px-2 py-0.5 rounded-full bg-zinc-700 text-zinc-200">
-                      {isRtl ? 'التاني' : 'P2'}
+                      {nameB}
                     </span>
                   ) : null}
                 </div>

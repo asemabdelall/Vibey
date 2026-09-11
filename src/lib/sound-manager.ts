@@ -11,7 +11,13 @@ type SoundType =
   | 'plotTwist'
   | 'guessCorrect'
   | 'guessWrong'
-  | 'resultReveal';
+  | 'resultReveal'
+  | 'banterAppear'
+  | 'nameConfirmed'
+  | 'moreLikelyReveal'
+  | 'pointAtReveal'
+  | 'callback'
+  | 'finalWords';
 
 class SoundManager {
   private ctx: AudioContext | null = null;
@@ -273,6 +279,112 @@ class SoundManager {
             gain.connect(ctx.destination);
             osc.start(startTime);
             osc.stop(startTime + 0.75);
+          });
+          break;
+        }
+
+        case 'banterAppear': {
+          // Playful subtle pop-chime (F5 to A5)
+          const freqs = [698.46, 880.0];
+          freqs.forEach((freq, idx) => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            const startTime = now + idx * 0.05;
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(freq, startTime);
+            gain.gain.setValueAtTime(0.04, startTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, startTime + 0.14);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(startTime);
+            osc.stop(startTime + 0.15);
+          });
+          break;
+        }
+
+        case 'nameConfirmed': {
+          // Upbeat positive confirmation chime (D5 -> G5)
+          const notes = [587.33, 783.99];
+          notes.forEach((freq, idx) => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            const startTime = now + idx * 0.07;
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(freq, startTime);
+            gain.gain.setValueAtTime(0.06, startTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, startTime + 0.22);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(startTime);
+            osc.stop(startTime + 0.24);
+          });
+          break;
+        }
+
+        case 'moreLikelyReveal': {
+          // Dramatic playful chord (E4, G#4, B4, E5)
+          const chord = [329.63, 415.3, 493.88, 659.25];
+          chord.forEach((freq, idx) => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            const startTime = now + idx * 0.04;
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(freq, startTime);
+            gain.gain.setValueAtTime(0.05, startTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, startTime + 0.35);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(startTime);
+            osc.stop(startTime + 0.38);
+          });
+          break;
+        }
+
+        case 'pointAtReveal': {
+          // Snappy rapid frequency sweep
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(320, now);
+          osc.frequency.exponentialRampToValueAtTime(740, now + 0.16);
+          gain.gain.setValueAtTime(0.06, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.18);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now);
+          osc.stop(now + 0.2);
+          break;
+        }
+
+        case 'callback': {
+          // Nostalgic warm bell tone
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(440, now);
+          osc.frequency.linearRampToValueAtTime(436, now + 0.3);
+          gain.gain.setValueAtTime(0.06, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now);
+          osc.stop(now + 0.38);
+          break;
+        }
+
+        case 'finalWords': {
+          // Ambient glowing duo tone
+          [349.23, 523.25].forEach((freq) => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(freq, now);
+            gain.gain.setValueAtTime(0.04, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.5);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(now);
+            osc.stop(now + 0.55);
           });
           break;
         }
